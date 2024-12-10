@@ -1,0 +1,39 @@
+DELIMITER //
+
+CREATE PROCEDURE InsertSailor(
+  IN sailorName VARCHAR(50),
+  IN birthDate DATE,
+  IN sailorRate INT,
+  OUT responseMessage VARCHAR(255)
+)
+BEGIN
+  IF TIMESTAMPDIFF(YEAR, birthDate, CURDATE()) < 24 THEN
+    SET responseMessage = "Error: Sailor must be at least 24 years old.";
+  ELSE
+    INSERT INTO Sailors (S_name, B_date, Rate) VALUES (sailorName, birthDate, sailorRate);
+    SET responseMessage = "Sailor added successfully.";
+  END IF;
+END//
+
+CREATE PROCEDURE InsertReservation(
+  IN sailorId INT,
+  IN boatId INT,
+  IN reservationDate DATE,
+  OUT responseMessage VARCHAR(255)
+)
+BEGIN
+  DECLARE sailorRate INT;
+
+  SELECT Rate INTO sailorRate FROM Sailors WHERE S_Id = sailorId;
+
+  IF sailorRate IS NULL THEN
+    SET responseMessage = "Error: Invalid Sailor ID.";
+  ELSEIF sailorRate < 5 THEN
+    SET responseMessage = "Error: Sailor's rate is too low for this reservation.";
+  ELSE
+    INSERT INTO Reserves (S_Id, B_Id, Day) VALUES (sailorId, boatId, reservationDate);
+    SET responseMessage = "Reservation added successfully.";
+  END IF;
+END//
+
+DELIMITER ;

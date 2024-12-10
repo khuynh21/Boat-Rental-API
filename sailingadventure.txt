@@ -1,0 +1,24 @@
+CREATE DATABASE IF NOT EXISTS sailingadventure;
+USE sailingadventure;
+
+CREATE TABLE IF NOT EXISTS Sailors (
+  S_Id INT AUTO_INCREMENT PRIMARY KEY,
+  S_name VARCHAR(50),
+  B_date DATE,
+  Rate INT
+);
+
+CREATE TABLE IF NOT EXISTS Boats (
+  B_Id INT AUTO_INCREMENT PRIMARY KEY,
+  B_name VARCHAR(50),
+  B_type VARCHAR(50)
+);
+
+CREATE TABLE IF NOT EXISTS Reserves (
+  S_Id INT,
+  B_Id INT,
+  Day DATE,
+  PRIMARY KEY (S_Id, B_Id, Day),
+  FOREIGN KEY (S_Id) REFERENCES Sailors(S_Id),
+  FOREIGN KEY (B_Id) REFERENCES Boats(B_Id)
+);
